@@ -10,67 +10,95 @@ class Person {
     this.leftLeg = {x1: x, y1:y+r*6, x2: x-r*1.5, y2: y+r*9}
     this.rightLeg = {x1: x, y1:y+r*6, x2: x+r*1.5, y2: y+r*9}
 
-    this.svg = {
-      head: null,
-      neck: null,
-      leftHand: null,
-      rightHand: null,
-      body: null,
-      leftLeg: null,
-      rightLeg: null
-    }
+    this.position = 0
+
+    this.svg = svg.group(
+      svg.circle(this.head.x, this.head.y, this.head.r).attr({'id': 'head'}),
+      svg.line(this.neck.x1, this.neck.y1, this.neck.x2, this.neck.y2).attr({'stroke-width': 2, 'stroke': 'black', 'id': 'neck'}),
+      svg.line(this.body.x1, this.body.y1, this.body.x2, this.body.y2).attr({'stroke-width': 2, 'stroke': 'black', 'id': 'body'}),
+      svg.group(
+        svg.line(this.leftHand.x1, this.leftHand.y1, this.leftHand.x2, this.leftHand.y2).attr({'stroke-width': 2, 'stroke': 'black'}),
+        svg.line(this.leftHand.x2, this.leftHand.y2, this.leftHand.x3, this.leftHand.y3).attr({'stroke-width': 2, 'stroke': 'black'})).attr({'id': 'lefthand'}),
+      svg.group(
+        svg.line(this.rightHand.x1, this.rightHand.y1, this.rightHand.x2, this.rightHand.y2).attr({'stroke-width': 2, 'stroke': 'black'}),
+        svg.line(this.rightHand.x2, this.rightHand.y2, this.rightHand.x3, this.rightHand.y3).attr({'stroke-width': 2, 'stroke': 'black'})).attr({'id': 'righthand'}),
+      svg.line(this.leftLeg.x1, this.leftLeg.y1, this.leftLeg.x2, this.leftLeg.y2).attr({'stroke-width': 2, 'stroke': 'black', 'id': 'leftleg'}),
+      svg.line(this.rightLeg.x1, this.rightLeg.y1, this.rightLeg.x2, this.rightLeg.y2).attr({'stroke-width': 2, 'stroke': 'black', 'id': 'rightleg'})
+    )
   }
 
-  svgInit() {
-    this.svg.head = svg.circle(this.head.x, this.head.y, this.head.r)
-    this.svg.neck = svg.line(this.neck.x1, this.neck.y1, this.neck.x2, this.neck.y2).attr({'stroke-width': 2, 'stroke': 'black'})
-    this.svg.body = svg.line(this.body.x1, this.body.y1, this.body.x2, this.body.y2).attr({'stroke-width': 2, 'stroke': 'black'})
-    this.svg.leftHand = svg.group(
-      svg.line(this.leftHand.x1, this.leftHand.y1, this.leftHand.x2, this.leftHand.y2).attr({'stroke-width': 2, 'stroke': 'black'}),
-      svg.line(this.leftHand.x2, this.leftHand.y2, this.leftHand.x3, this.leftHand.y3).attr({'stroke-width': 2, 'stroke': 'black'}))
-    this.svg.rightHand = svg.group(
-      svg.line(this.rightHand.x1, this.rightHand.y1, this.rightHand.x2, this.rightHand.y2).attr({'stroke-width': 2, 'stroke': 'black'}),
-      svg.line(this.rightHand.x2, this.rightHand.y2, this.rightHand.x3, this.rightHand.y3).attr({'stroke-width': 2, 'stroke': 'black'}))
-    this.svg.leftLeg = svg.line(this.leftLeg.x1, this.leftLeg.y1, this.leftLeg.x2, this.leftLeg.y2).attr({'stroke-width': 2, 'stroke': 'black'})
-    this.svg.rightLeg = svg.line(this.rightLeg.x1, this.rightLeg.y1, this.rightLeg.x2, this.rightLeg.y2).attr({'stroke-width': 2, 'stroke': 'black'})
-    return this.svg
-  }
+  // svgInit() {
+  //   this.svg = 
 
-  step() {
-    this.head.x += 1
-    this.svg.head.x += 1
-    console.log(this.head)
+  //   this.svg.step = (direction) => {
+  //     return new Promise( function (resolve, reject) {
+  //       console.log(aa)
+  //       if (direction === 'right') aa = aa + 25
+  //       else aa = aa - 25
+  //       this.svg.animate({'transform': `t${aa} 0`}, 100, function () {
+  //         resolve()
+  //       })
+        
+  //       this.svg.select('#leftleg').animate({'x2': 80}, 125, function () {
+  //         this.svg.select('#leftleg').animate({'x2': 30}, 50)
+  //       })
+
+  //       this.svg.select('#rightleg').animate({'x2': 50}, 125, function () {
+  //         this.svg.select('#rightleg').animate({'x2': 90}, 50)
+  //       })
+  //     })
+  //   }
+
+  //   this.svg.jump = function () {
+  //     console.log('JUMP')
+  //   }
+
+  //   return this.svg
+  // }
+
+  step(direction) {
+    if (direction === 'right') this.position = this.position + 25
+    else this.position = this.position - 25
+
+    this.svg.animate({'transform': `t${aa} 0`}, 100)
+      
+    this.svg.select('#leftleg').animate({'x2': 80}, 125, function () {
+      this.svg.select('#leftleg').animate({'x2': 30}, 50)
+    })
+
+    this.svg.select('#rightleg').animate({'x2': 50}, 125, function () {
+      this.svg.select('#rightleg').animate({'x2': 90}, 50)
+    })
   }
 }
 
-let player1 = new Person(60,20,20, svg)
-let player1SVG = player1.svgInit()
-console.log(player1SVG)
+let player1 = new Person(60,100,20, svg)
+console.log(player1)
 
-setInterval(function () {
-  player1.step()
-},  1000)
+function sit() {
+  return new Promise(function (resolve, reject) {
 
-// const head = player1.head
-// const neck = player1.neck
-// const body = player1.body
-// const leftHand = player1.leftHand
-// const rightHand = player1.rightHand
-// const leftLeg = player1.leftLeg
-// const rightLeg = player1.rightLeg
+  })
+}
 
-// var a = svg.circle(head.x, head.y, head.r)
+function jump() {
 
-// var b = svg.line(neck.x1, neck.y1, neck.x2, neck.y2).attr({'stroke-width': 2, 'stroke': 'black'})
+}
 
-// var c = svg.line(body.x1, body.y1, body.x2, body.y2).attr({'stroke-width': 2, 'stroke': 'black'})
 
-// var d = svg.line(leftHand.x1, leftHand.y1, leftHand.x2, leftHand.y2).attr({'stroke-width': 2, 'stroke': 'black'})
-// svg.line(leftHand.x2, leftHand.y2, leftHand.x3, leftHand.y3).attr({'stroke-width': 2, 'stroke': 'black'})
+window.addEventListener('keydown', function (e) {
+  const arrowRight = 39
+  const dKey = 68
+  const arrowLeft = 37
+  const aKey = 65
+  const upArrow = 38
+  const downArrow = 40
+  const wKey = 87
+  const sKey = 83
 
-// svg.line(rightHand.x1, rightHand.y1, rightHand.x2, rightHand.y2).attr({'stroke-width': 2, 'stroke': 'black'})
-// svg.line(rightHand.x2, rightHand.y2, rightHand.x3, rightHand.y3).attr({'stroke-width': 2, 'stroke': 'black'})
+  if (e.which === arrowRight || e.which === dKey) player1SVG.step('right')
+  else if (e.which === arrowLeft || e.which === aKey) step('left')
 
-// svg.line(leftLeg.x1, leftLeg.y1, leftLeg.x2, leftLeg.y2).attr({'stroke-width': 2, 'stroke': 'black'})
-// svg.line(rightLeg.x1, rightLeg.y1, rightLeg.x2, rightLeg.y2).attr({'stroke-width': 2, 'stroke': 'black'})
-
+  if (e.which === upArrow || e.which === wKey) jump()
+  if (e.which === downArrow || e.which === sKey) sit()
+})
