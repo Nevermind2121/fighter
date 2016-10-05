@@ -60,13 +60,13 @@ class Person {
     if (direction === 'right') this.position = this.position + 25
     else this.position = this.position - 25
 
-    this.svg.animate({'transform': `t${aa} 0`}, 100)
+    this.svg.animate({'transform': `t${this.position} 0`}, 100)
       
-    this.svg.select('#leftleg').animate({'x2': 80}, 125, function () {
+    this.svg.select('#leftleg').animate({'x2': 80}, 125, () => {
       this.svg.select('#leftleg').animate({'x2': 30}, 50)
     })
 
-    this.svg.select('#rightleg').animate({'x2': 50}, 125, function () {
+    this.svg.select('#rightleg').animate({'x2': 50}, 125, () => {
       this.svg.select('#rightleg').animate({'x2': 90}, 50)
     })
   }
@@ -96,8 +96,8 @@ window.addEventListener('keydown', function (e) {
   const wKey = 87
   const sKey = 83
 
-  if (e.which === arrowRight || e.which === dKey) player1SVG.step('right')
-  else if (e.which === arrowLeft || e.which === aKey) step('left')
+  if (e.which === arrowRight || e.which === dKey) player1.step('right')
+  else if (e.which === arrowLeft || e.which === aKey) player1.step('left')
 
   if (e.which === upArrow || e.which === wKey) jump()
   if (e.which === downArrow || e.which === sKey) sit()
