@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>fight game</title>
+  <style>
+    html, body {
+        margin: 0px;
+        padding: 0px;
+      }
+
+    .svg-container {
+      display: inline-block;
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%;
+      vertical-align: top;
+      overflow: hidden;
+
+    }
+
+    .my-svg{ /* svg into : object, img or inline */
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      max-height: 768px;
+    }
+  </style>
+</head>
+<body>
+  <div class="svg-container">
+    <svg id="svg" class="my-svg" viewBox="0 0 1000 500">
+    </svg>
+  </div>
+  <script src="fight.js" ></script>
+</body>
+</html>
