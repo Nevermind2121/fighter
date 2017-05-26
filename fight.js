@@ -1,3 +1,12 @@
+const arrowRight = 39
+const dKey = 68
+const arrowLeft = 37
+const aKey = 65
+const upArrow = 38
+const downArrow = 40
+const wKey = 87
+const sKey = 83
+
 class Game {
   constructor(svg) {
     this.svg = document.getElementById(svg)
@@ -18,6 +27,48 @@ class Person {
     this.rightLeg = {x1: x, y1:y+r*6, x2: x+r*0.75, y2: y+r*7.5, x3: x+r*1.5, y3: y+r*9}
     this.svgCanvas = document.getElementById(svg)
     this.enemy = enemy
+  }
+
+  changeAllXAxis(value) {
+    this.x = this.x + value
+    this.head = Object.assign(this.head, {x: this.x})
+    this.neck = Object.assign(this.neck, {x1: this.x, x2: this.x})
+    this.leftHand = Object.assign(this.leftHand, {x1: this.x, x2: this.x-this.r*1.5, x3: this.x-this.r*1.5})
+    this.rightHand = Object.assign(this.rightHand, {x1: this.x, x2: this.x+this.r*1.5, x3: this.x+this.r*3})
+    this.body = Object.assign(this.body, {x1: this.x, x2: this.x})
+    this.leftLeg = Object.assign(this.leftLeg, {x1: this.x, x2: this.x-this.r*0.75, x3: this.x-this.r*1.5})
+    this.rightLeg = Object.assign(this.rightLeg, {x1: this.x, x2: this.x+this.r*0.75, x3: this.x+this.r*1.5})
+  }
+
+  // animation(value, animationDuration, animatedMovement) {
+  //   let progress = 0;
+  //   let progressIncrement = animationDuration/value;
+  //   if (progressIncrement < 0) progressIncrement = progressIncrement * -1;
+  //   let iterationValueChange = value/progressIncrement;
+
+  //   let interv = setInterval(()=> {
+  //     debugger;
+  //     console.log(this)
+  //     var a = animatedMovement(iterationValueChange)
+  //     console.log(a)
+  //     this.render()
+  //     progress += progressIncrement
+  //     if (progress === animationDuration) clearInterval(interv)
+  //   }, progressIncrement)
+  // }
+
+  step(direction) {
+    if (direction === 'right') {
+      let progress = 0;
+      let interv = setInterval(()=> {
+        this.changeAllXAxis(1)
+        this.render()
+        progress += 10;
+      if (progress === 100) clearInterval(interv)
+      }, 10)
+      // this.animation(-10, 100, this.changeAllXAxis)
+    }
+    else if (direction === 'left') this.animation(10, 100, this.changeAllXAxis)
   }
 
   render() {
@@ -44,18 +95,35 @@ class Person {
     <g/>`
     person.push(head, neck, body, leftHand, rightHand, leftLeg, rightLeg)
 
+    console.log('person array')
+    console.log(person)
+
     let isEnemy = ''
     if (this.enemy) isEnemy = 'enemy'
 
     const svgPerson = `<g class="person ${isEnemy}">` + person.join('')
     svg.innerHTML = svgPerson
+    console.log('svgPerson')
+    console.log(svgPerson)
+    console.log('svg')
+    console.log(svg)
     
   }
 }
 
 window.onload = function () {
-  let person = new Person(50,20,15, 'svg')
-  let game = new Game('svg')
+  const person = new Person(50,20,15, 'svg')
+  const game = new Game('svg')
+  person.render()
+
+  window.onkeydown = function (e) {
+
+    if (e.which === arrowRight || e.which === dKey) person.step('right')
+    else if (e.which === arrowLeft || e.which === aKey) person.step('left')
+
+    if (e.which === upArrow || e.which === wKey) jump()
+    if (e.which === downArrow || e.which === sKey) sit()
+  }
 
   console.log(game.svg)
 }
@@ -65,5 +133,4 @@ document.addEventListener('DOMContentLoaded', function () {
     // Our hawaiian greeting is displayed as soon as the page loads,
 
     console.log('Aloha');
-
 });
