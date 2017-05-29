@@ -20,8 +20,8 @@ class Person {
     this.r = r
     this.head = {x,y,r}
     this.neck = {x1: x, y1: y+r, x2: x, y2:y+r*2}
-    this.leftHand = {x1: x, y1: y+r*2, x2: x-r*1.5, y2: y+r*3, x3: x-r*1.5, y3: y+r*4.5}
-    this.rightHand = {x1: x, y1: y+r*2, x2: x+r*1.5, y2: y+r*3, x3: x+r*3, y3: y+r*3.5}
+    this.leftHand = {x1: 22.5, y1: 0, x2: 0, y2: 15, x3: 0, y3: 47.5, groupX: x-r*1.5, groupY: y+r*2}
+    this.rightHand = {x1: 0, y1: 0, x2: 22.5, y2: 15, x3: 45, y3: 22.5, groupX: x, groupY: y+r*2}
     this.body = {x1: x, y1: y+r*2, x2: x, y2:y+r*6}
     this.leftLeg = {x1: 22.5, y1:0, x2: 11.25, y2: 22.5, x3: 0, y3: 45, groupX: x-r*1.5, groupY: y+r*6}
     this.rightLeg = {x1: 0, y1:0, x2: 11.25, y2: 22.5, x3: 22.5, y3: 45, groupX: x, groupY: y+r*6}
@@ -133,31 +133,35 @@ class Person {
 
   render() {
     const svg = this.svgCanvas
-    const person = []
     const head = `<circle cx="${this.head.x}" cy="${this.head.y}" r="${this.head.r}" class="head"/>`
     const neck = `<line x1="${this.neck.x1}" y1="${this.neck.y1}" x2="${this.neck.x2}" y2="${this.neck.y2}" stroke="black" stroke-width="2" class="neck"/>`
     const body = `<line x1="${this.body.x1}" y1="${this.body.y1}" x2="${this.body.x2}" y2="${this.body.y2}" stroke="black" stroke-width="2" class="body"/>`
-    const leftHand = `
-    <line x1="${this.leftHand.x1}" y1="${this.leftHand.y1}" x2="${this.leftHand.x2}" y2="${this.leftHand.y2}" stroke="black" stroke-width="2"/>
-    <line x1="${this.leftHand.x2}" y1="${this.leftHand.y2}" x2="${this.leftHand.x3}" y2="${this.leftHand.y3}" stroke="black" stroke-width="2"/>
-    `
-    const rightHand = ` <g class="rightHand">
+
+    const leftHand = 
+    `<g class="leftHand" transform="translate(${this.leftHand.groupX}, ${this.leftHand.groupY})">
+      <line x1="${this.leftHand.x1}" y1="${this.leftHand.y1}" x2="${this.leftHand.x2}" y2="${this.leftHand.y2}" stroke="black" stroke-width="2"/>
+      <line x1="${this.leftHand.x2}" y1="${this.leftHand.y2}" x2="${this.leftHand.x3}" y2="${this.leftHand.y3}" stroke="black" stroke-width="2"/>
+    </g>`
+    
+    const rightHand = 
+    `<g class="rightHand" transform="translate(${this.rightHand.groupX}, ${this.rightHand.groupY})">
       <line x1="${this.rightHand.x1}" y1="${this.rightHand.y1}" x2="${this.rightHand.x2}" y2="${this.rightHand.y2}" stroke="black" stroke-width="2"/>
       <line x1="${this.rightHand.x2}" y1="${this.rightHand.y2}" x2="${this.rightHand.x3}" y2="${this.rightHand.y3}" stroke="black" stroke-width="2"/>
     </g>`
     
-
-    let legs = 
+    const leftLeg = 
     `<g class="leftleg" transform="translate(${this.leftLeg.groupX}, ${this.leftLeg.groupY})" >
       <line x1="${this.leftLeg.x1}" y1="${this.leftLeg.y1}" x2="${this.leftLeg.x2}" y2="${this.leftLeg.y2}" stroke="black" stroke-width="2"/>
       <line x1="${this.leftLeg.x2}" y1="${this.leftLeg.y2}" x2="${this.leftLeg.x3}" y2="${this.leftLeg.y3}" stroke="black" stroke-width="2"/>
-    </g>
-    <g class="rightLeg" transform="translate(${this.rightLeg.groupX}, ${this.rightLeg.groupY})">
+    </g>`
+
+    const rightLeg = 
+    `<g class="rightLeg" transform="translate(${this.rightLeg.groupX}, ${this.rightLeg.groupY})">
       <line x1="${this.rightLeg.x1}" y1="${this.rightLeg.y1}" x2="${this.rightLeg.x2}" y2="${this.rightLeg.y2}" stroke="black" stroke-width="2"/>
       <line x1="${this.rightLeg.x2}" y1="${this.rightLeg.y2}" x2="${this.rightLeg.x3}" y2="${this.rightLeg.y3}" stroke="black" stroke-width="2"/>
     </g>`
 
-    person.push(head, neck, body, leftHand, rightHand, legs)
+    const person = [head, neck, body, leftHand, rightHand, leftLeg, rightLeg]
 
     let isEnemy = ''
     if (this.enemy) isEnemy = 'enemy'
