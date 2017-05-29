@@ -131,6 +131,31 @@ class Person {
     let interv = setInterval(legsAnimation, 10)
   }
 
+  handHit() {
+    let back = false
+    // this.rightHand = {x1: 0, y1: 0, x2: 22.5, y2: 15, x3: 45, y3: 22.5, groupX: x, groupY: y+r*2}
+    let interv = setInterval(()=> {
+      if (!back) {
+        if (this.rightHand.y2 === 0 && this.rightHand.y3 === 0) {
+        this.rightHand.x3 += 4.5
+        }
+        else {
+          this.rightHand.y2 -= 3
+          this.rightHand.y3 -= 4.5
+        }
+        if (this.rightHand.x3 === 67.5) back = true
+      }
+      
+      if (back) {
+        this.rightHand.y2 += 3
+        this.rightHand.y3 += 4.5
+        this.rightHand.x3 -= 4.5
+        if (this.rightHand.y2 === 15 && this.rightHand.y3 === 22.5 && this.rightHand.x3 === 45) clearInterval(interv)
+      }
+      this.render()
+    }, 10)
+  }
+
   render() {
     const svg = this.svgCanvas
     const head = `<circle cx="${this.head.x}" cy="${this.head.y}" r="${this.head.r}" class="head"/>`
@@ -189,6 +214,10 @@ window.onload = function () {
   }
 
   window.onkeydown = function (e) {
+
+    if (e.which === 88) {
+      person.handHit()
+    }
 
     if (e.which === arrowRight || e.which === dKey) {
       if (person.isMoving !== true) person.move('right')
