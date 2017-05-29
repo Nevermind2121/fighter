@@ -27,6 +27,7 @@ class Person {
     this.rightLeg = {x1: 0, y1:0, x2: 11.25, y2: 22.5, x3: 22.5, y3: 45, groupX: x, groupY: y+r*6}
     this.svgCanvas = document.getElementById(svg)
     this.enemy = enemy
+    this.isMoving = false
   }
 
   // changeAllXAxis(value) {
@@ -72,38 +73,42 @@ class Person {
   }
 
   move(direction) {
+    console.log('move')
+    this.isMoving = true
     const currX = this.x
     let targetX = null
     if (direction === 'left') targetX = currX - 10
     else if (direction === 'right') targetX = currX + 10
-
-    let interv = setInterval(()=> {
-      if (direction === 'left') this.x = this.x - 1
-      else if (direction === 'right') this.x = this.x + 1
-      this.render()
-      if (this.x === targetX) clearInterval(interv)
-    }, 10)
-    this.step()
-  }
-
-  step() {
-    let back = false
 
     const diffBetweenStartAndEndRightLeg = this.rightLeg.x1 - this.rightLeg.x2
     const diffBetweenStartAndEnd2RightLeg = this.rightLeg.x1 - this.rightLeg.x3
 
     const diffBetweenStartAndEndLeftLeg = this.leftLeg.x2 + this.rightLeg.x2
     const diffBetweenStartAndEnd2LeftLeg = this.leftLeg.x1 + this.rightLeg.x3
+
+    let changePosition = () => {
+      if (direction === 'left') this.x = this.x - 1
+      else if (direction === 'right') this.x = this.x + 1
+      
+      this.render()
+      if (this.x === targetX) {
+        this.isMoving = false
+        clearInterval(interv)
+      }
+    }
+
+    this.step(diffBetweenStartAndEndRightLeg, diffBetweenStartAndEnd2RightLeg, diffBetweenStartAndEndLeftLeg, diffBetweenStartAndEnd2LeftLeg)
+    changePosition()
+    let interv = setInterval(changePosition, 10)
     
-    const startPositionRightLegX1 = 0
+  }
+
+  step(diffBetweenStartAndEndRightLeg, diffBetweenStartAndEnd2RightLeg, diffBetweenStartAndEndLeftLeg, diffBetweenStartAndEnd2LeftLeg) {
+    let back = false    
     const startPositionRightLegX2 = 11.25
     const startPositionRightLegX3 = 22.5
 
-    const startPositionLeftLegX1 = 22.5
-    const startPositionLeftLegX2 = 11.25
-    const startPositionLeftLegX3 = 0
-
-    let interv = setInterval(()=> {
+    let legsAnimation = ()=> {
       if (back) {
         this.leftLeg.x2 = this.leftLeg.x2 - diffBetweenStartAndEndLeftLeg/5
         this.leftLeg.x3 = this.leftLeg.x3 - diffBetweenStartAndEnd2LeftLeg/5
@@ -120,9 +125,10 @@ class Person {
         this.rightLeg.x3 = this.rightLeg.x3 + diffBetweenStartAndEnd2RightLeg/5
         if (this.rightLeg.x2 === this.rightLeg.x1 && this.rightLeg.x3 === this.rightLeg.x1) back = true
       }
-      this.render()
-    }, 10)
-    
+    }
+
+    legsAnimation()
+    let interv = setInterval(legsAnimation, 10)
   }
 
   render() {
@@ -163,15 +169,31 @@ class Person {
   }
 }
 
+
 window.onload = function () {
   const person = new Person(50,20,15, 'svg')
   const game = new Game('svg')
   person.render()
 
+  window.onkeyup = function (e) {
+    if (e.which === arrowRight || e.which === dKey) {
+      person.isMoving = false     
+    }
+    if (e.which === arrowLeft || e.which === aKey) {
+       person.isMoving = false
+    }
+  }
+
   window.onkeydown = function (e) {
 
-    if (e.which === arrowRight || e.which === dKey) person.move('right')
-    else if (e.which === arrowLeft || e.which === aKey) person.move('left')
+    if (e.which === arrowRight || e.which === dKey) {
+      if (person.isMoving !== true) person.move('right')
+    }
+
+    if (e.which === arrowLeft || e.which === aKey) {
+      if (person.isMoving !== true) person.move('left')
+    }
+    // else if (e.which === arrowLeft || e.which === aKey) person.move('left')
 
     if (e.which === upArrow || e.which === wKey) jump()
     if (e.which === downArrow || e.which === sKey) sit()
