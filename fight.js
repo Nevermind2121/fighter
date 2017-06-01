@@ -90,11 +90,14 @@ class Person {
     const diffBetweenStartAndEndLeftLeg = this.leftLeg.x2 + this.rightLeg.x2
     const diffBetweenStartAndEnd2LeftLeg = this.leftLeg.x1 + this.rightLeg.x3
 
+    let personElement = document.getElementsByClassName('person')[0]
     let changePosition = () => {
       if (direction === 'left') this.x = this.x - 1
       else if (direction === 'right') this.x = this.x + 1
+
+      personElement.setAttribute('transform', `translate(${this.x})`)
+      console.log(personElement.getAttribute('transform'))
       
-      this.render()
       if (this.x === targetX) {
         this.isMoving = false
         clearInterval(interv)
@@ -111,6 +114,9 @@ class Person {
     let back = false    
     const startPositionRightLegX2 = 11.25
     const startPositionRightLegX3 = 22.5
+
+    let leftLegElement = document.querySelectorAll('.leftLeg line')
+    let rightLegElement = document.querySelectorAll('.rightLeg line')
 
     let legsAnimation = ()=> {
       if (back) {
@@ -129,6 +135,15 @@ class Person {
         this.rightLeg.x3 = this.rightLeg.x3 + diffBetweenStartAndEnd2RightLeg/5
         if (this.rightLeg.x2 === this.rightLeg.x1 && this.rightLeg.x3 === this.rightLeg.x1) back = true
       }
+
+      leftLegElement[0].setAttribute('x2', this.leftLeg.x2)
+      leftLegElement[1].setAttribute('x1', this.leftLeg.x2)
+      leftLegElement[1].setAttribute('x2', this.leftLeg.x3)
+
+      rightLegElement[0].setAttribute('x2', this.rightLeg.x2)
+      rightLegElement[1].setAttribute('x1', this.rightLeg.x2)
+      rightLegElement[1].setAttribute('x2', this.rightLeg.x3)
+
     }
 
     legsAnimation()
@@ -137,7 +152,7 @@ class Person {
 
   handHit() {
     let back = false
-    // this.rightHand = {x1: 0, y1: 0, x2: 22.5, y2: 15, x3: 45, y3: 22.5, groupX: x, groupY: y+r*2}
+    let rightHand = document.querySelectorAll('.rightHand line')
     let interv = setInterval(()=> {
       if (!back) {
         if (this.rightHand.y2 === 0 && this.rightHand.y3 === 0) {
@@ -156,7 +171,14 @@ class Person {
         this.rightHand.x3 -= 4.5
         if (this.rightHand.y2 === 15 && this.rightHand.y3 === 22.5 && this.rightHand.x3 === 45) clearInterval(interv)
       }
-      this.render()
+      // this.render()
+      rightHand[0].setAttribute('x2', this.rightHand.x2)
+      rightHand[1].setAttribute('x1', this.rightHand.x2)
+      rightHand[1].setAttribute('x2', this.rightHand.x3)
+
+      rightHand[0].setAttribute('y2', this.rightHand.y2)
+      rightHand[1].setAttribute('y1', this.rightHand.y2)
+      rightHand[1].setAttribute('y2', this.rightHand.y3)
     }, 10)
   }
 
@@ -179,7 +201,7 @@ class Person {
     </g>`
     
     const leftLeg = 
-    `<g class="leftleg" transform="translate(${this.leftLeg.groupX}, ${this.leftLeg.groupY})" >
+    `<g class="leftLeg" transform="translate(${this.leftLeg.groupX}, ${this.leftLeg.groupY})" >
       <line x1="${this.leftLeg.x1}" y1="${this.leftLeg.y1}" x2="${this.leftLeg.x2}" y2="${this.leftLeg.y2}" stroke="black" stroke-width="2"/>
       <line x1="${this.leftLeg.x2}" y1="${this.leftLeg.y2}" x2="${this.leftLeg.x3}" y2="${this.leftLeg.y3}" stroke="black" stroke-width="2"/>
     </g>`
@@ -197,8 +219,6 @@ class Person {
 
     const svgPerson = `<g transform="translate(${this.x})" class="person ${isEnemy}">` + person.join('') + '</g>'
     svg.innerHTML = svgPerson
-
-    const allGroupElems = document.getElementsByTagName('g')
   }
 }
 
