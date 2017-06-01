@@ -10,6 +10,8 @@ const sKey = 83
 class Game {
   constructor(svg) {
     this.svg = document.getElementById(svg)
+    this.begin = -100
+    this.end = 1000
   }
 }
 
@@ -57,6 +59,9 @@ class Person {
   //     if (progress === animationDuration) clearInterval(interv)
   //   }, progressIncrement)
   // }
+
+
+
   recountCoords(minX, minY, object) {
     if (object['counted']) return
     object['counted'] = true 
@@ -73,7 +78,6 @@ class Person {
   }
 
   move(direction) {
-    console.log('move')
     this.isMoving = true
     const currX = this.x
     let targetX = null
@@ -220,11 +224,11 @@ window.onload = function () {
     }
 
     if (e.which === arrowRight || e.which === dKey) {
-      if (person.isMoving !== true) person.move('right')
+      if (person.isMoving !== true && game.end > person.x) person.move('right')
     }
 
     if (e.which === arrowLeft || e.which === aKey) {
-      if (person.isMoving !== true) person.move('left')
+      if (person.isMoving !== true && game.begin < person.x) person.move('left')
     }
     // else if (e.which === arrowLeft || e.which === aKey) person.move('left')
 
