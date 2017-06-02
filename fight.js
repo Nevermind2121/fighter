@@ -30,51 +30,12 @@ class Person {
     this.svgCanvas = document.getElementById(svg)
     this.enemy = enemy
     this.isMoving = false
+    this.health = 100
   }
 
-  // changeAllXAxis(value) {
-  //   this.x = this.x + value
-  //   this.head = Object.assign(this.head, {x: this.x})
-  //   this.neck = Object.assign(this.neck, {x1: this.x, x2: this.x})
-  //   this.leftHand = Object.assign(this.leftHand, {x1: this.x, x2: this.x-this.r*1.5, x3: this.x-this.r*1.5})
-  //   this.rightHand = Object.assign(this.rightHand, {x1: this.x, x2: this.x+this.r*1.5, x3: this.x+this.r*3})
-  //   this.body = Object.assign(this.body, {x1: this.x, x2: this.x})
-  //   this.leftLeg = Object.assign(this.leftLeg, {groupX: this.x-this.r*1.5})
-  //   this.rightLeg = Object.assign(this.rightLeg, {x1: this.x, x2: this.x+this.r*0.75, x3: this.x+this.r*1.5})
-  // }
-
-  // animation(value, animationDuration, animatedMovement) {
-  //   let progress = 0;
-  //   let progressIncrement = animationDuration/value;
-  //   if (progressIncrement < 0) progressIncrement = progressIncrement * -1;
-  //   let iterationValueChange = value/progressIncrement;
-
-  //   let interv = setInterval(()=> {
-  //     debugger;
-  //     console.log(this)
-  //     var a = animatedMovement(iterationValueChange)
-  //     console.log(a)
-  //     this.render()
-  //     progress += progressIncrement
-  //     if (progress === animationDuration) clearInterval(interv)
-  //   }, progressIncrement)
-  // }
-
-
-
-  recountCoords(minX, minY, object) {
-    if (object['counted']) return
-    object['counted'] = true 
-    object.minX = minX
-    object.minY = minY
-    for(let i = 1; i < 10; i ++) {
-      let propValueX = object['x'+i]
-      let propValueY = object['y'+i]
-      object['x'+i] = minX - propValueX
-      object['y'+i] = minY - propValueY
-      if (object['x'+i] < 0) object['x'+i] = object['x'+i] * -1
-      if (object['y'+i] < 0) object['y'+i] = object['y'+i] * -1
-    }
+  decreaseHealth(value) {
+    this.health = this.health - value
+    document.querySelector('.health').setAttribute('width', this.health * 3)
   }
 
   move(direction) {
@@ -107,7 +68,6 @@ class Person {
     this.step(diffBetweenStartAndEndRightLeg, diffBetweenStartAndEnd2RightLeg, diffBetweenStartAndEndLeftLeg, diffBetweenStartAndEnd2LeftLeg)
     changePosition()
     let interv = setInterval(changePosition, 10)
-    
   }
 
   step(diffBetweenStartAndEndRightLeg, diffBetweenStartAndEnd2RightLeg, diffBetweenStartAndEndLeftLeg, diffBetweenStartAndEnd2LeftLeg) {
@@ -180,6 +140,7 @@ class Person {
       rightHand[1].setAttribute('y1', this.rightHand.y2)
       rightHand[1].setAttribute('y2', this.rightHand.y3)
     }, 10)
+    this.decreaseHealth(5)
   }
 
   render() {
@@ -218,13 +179,13 @@ class Person {
     if (this.enemy) isEnemy = 'enemy'
 
     const svgPerson = `<g transform="translate(${this.x})" class="person ${isEnemy}">` + person.join('') + '</g>'
-    svg.innerHTML = svgPerson
+    svg.innerHTML += svgPerson
   }
 }
 
 
 window.onload = function () {
-  const person = new Person(50,20,15, 'svg')
+  const person = new Person(50,100,15, 'svg')
   const game = new Game('svg')
   person.render()
 
